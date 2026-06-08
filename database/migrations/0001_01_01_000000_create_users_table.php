@@ -12,14 +12,32 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->id('userId');
+            $table->string('mail')->unique();
+            $table->string('password_hash');
+            $table->string('full_name');
+            $table->string('phone')->nullable();
+            $table->boolean('is_active')->default(false);
+            $table->enum('role', ['admin', 'trainer', 'student', 'financier'])->default('student');
+
+            // حقول الـ Student
+            $table->string('student_number')->nullable();
+            $table->date('date_birth')->nullable();
+            $table->enum('account_status', ['pending', 'activated', 'deactivated'])->default('pending');
+
+            // حقول الـ Mentor
+            $table->string('specialization')->nullable();
+            $table->integer('years_experience')->nullable();
+
+            // حقول الـ Admin
+            $table->enum('admin_level', ['super', 'regular'])->nullable();
+
+            // حقول الـ Financier
+            $table->string('organization_name')->nullable();
+
             $table->timestamps();
         });
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
